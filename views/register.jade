@@ -1,0 +1,55 @@
+extends layout
+
+block content
+  .min-h-screen.flex.items-center.justify-center.bg-gray-100
+    .bg-white.rounded-2xl.shadow-md.p-8.w-full.max-w-sm
+      h2.text-2xl.font-bold.text-center.text-gray-800.mb-6 회원가입
+
+      if error
+        p.text-sm.text-red-500.mb-4.text-center= error
+
+      form(action='/auth/register', method='POST')
+        .mb-4
+          label.block.text-sm.font-medium.text-gray-700.mb-1(for='name') 이름
+          input#name(
+            type='text',
+            name='name',
+            placeholder='이름을 입력하세요',
+            required,
+            class='w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-400'
+          )
+        .mb-4
+          label.block.text-sm.font-medium.text-gray-700.mb-1(for='studentId') 학번
+          input#studentId(
+            type='text',
+            name='studentId',
+            placeholder='학번을 입력하세요',
+            required,
+            class='w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-400'
+          )
+        .mb-4
+          label.block.text-sm.font-medium.text-gray-700.mb-1(for='username') 아이디
+          input#username(
+            type='text',
+            name='username',
+            placeholder='아이디를 입력하세요',
+            required,
+            class='w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-400'
+          )
+        .mb-6
+          label.block.text-sm.font-medium.text-gray-700.mb-1(for='password') 비밀번호
+          input#password(
+            type='password',
+            name='password',
+            placeholder='비밀번호를 입력하세요',
+            required,
+            class='w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-400'
+          )
+        button.w-full.font-semibold.py-2.rounded-lg.transition(
+          type='submit',
+          class='bg-blue-500 hover:bg-blue-600 text-white'
+        ) 회원가입
+
+      p.text-sm.text-center.text-gray-500.mt-4
+        | 이미 계정이 있으신가요?&nbsp;
+        a(href='/auth/login', class='text-blue-500 hover:underline') 로그인

@@ -1,0 +1,14 @@
+extends ../layout
+
+block content
+  h1 Posts
+  a(href='/posts/new') New Post
+  if posts.length
+    ul
+      each post in posts
+        li
+          a(href='/posts/' + post.id)= post.title
+          |  - 
+          span= post.created
+  else
+    p No posts yet.

@@ -1,0 +1,13 @@
+extends ../layout
+
+block content
+  h1 New Post
+  form(method='post', action='/posts')
+    div
+      label(for='title') Title
+      input#title(type='text', name='title')
+    div
+      label(for='body') Body
+      textarea#body(name='body')
+    div
+      button(type='submit') Create

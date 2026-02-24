@@ -1,0 +1,45 @@
+# Node modules
+node_modules/
+
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+pnpm-debug.log*
+
+# Runtime files
+pids
+*.pid
+*.pid.lock
+
+# dotenv
+.env
+.env.*
+
+# Coverage directory
+coverage/
+.nyc_output/
+
+# Build output
+dist/
+build/
+
+# Cache
+.cache/
+.parcel-cache/
+
+# Editor directories and files
+.vscode/
+.idea/
+*.sublime*
+
+# macOS
+.DS_Store
+
+# Public uploads
+public/uploads/
+
+# Misc
+lib-cov
+*.tgz

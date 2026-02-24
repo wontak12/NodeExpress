@@ -1,0 +1,7 @@
+extends ../layout
+
+block content
+  h1= post.title
+  p Posted: #{post.created}
+  p= post.body
+  a(href='/posts') Back

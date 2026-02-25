@@ -1,0 +1,94 @@
+extends layout
+
+block content
+  .min-h-screen.bg-gray-100
+    .max-w-4xl.mx-auto.py-10.px-4
+
+      .flex.items-center.justify-between.mb-8
+        h1.text-2xl.font-bold.text-gray-800 강의 목록
+        .flex.items-center.gap-4
+          span.text-sm.text-gray-500 #{user.name}님
+          button#enrollBtn(
+            class='bg-blue-500 hover:bg-blue-600 text-white text-sm font-semibold px-4 py-2 rounded-lg transition'
+          ) 강의 참여
+
+      if lectures.length === 0
+        .text-center.py-20.text-gray-400
+          p.text-lg 등록된 강의가 없습니다.
+          p.text-sm.mt-1 강의 참여 버튼을 눌러 인증번호를 입력해주세요.
+      else
+        .grid.grid-cols-1.gap-4
+          each lecture in lectures
+            .bg-white.rounded-2xl.shadow-sm.p-6
+              h2.text-lg.font-bold.text-gray-800= lecture.title
+              .flex.items-center.gap-3.mt-1
+                span.text-sm.text-gray-500= lecture.professor + ' 교수'
+                span.text-gray-300 |
+                span.text-sm.text-gray-500= lecture.year + '년 ' + lecture.semester + '학기'
+                span.text-gray-300 |
+                span.text-sm.text-blue-400= lecture.major
+              if lecture.description
+                p.text-sm.text-gray-600.mt-2= lecture.description
+
+  //- 강의 참여 모달
+  #modal.fixed.inset-0.bg-black.bg-opacity-50.flex.items-center.justify-center.hidden
+    .bg-white.rounded-2xl.shadow-lg.p-8.w-full.max-w-sm
+      h2.text-xl.font-bold.text-gray-800.mb-4 강의 참여
+      p.text-sm.text-gray-500.mb-4 강의 인증번호를 입력해주세요.
+      input#accessCodeInput(
+        type='text',
+        placeholder='인증번호 입력',
+        class='w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-400 mb-2'
+      )
+      p#modalError.text-sm.text-red-500.mb-3.hidden
+      .flex.gap-2
+        button#cancelBtn.flex-1.bg-gray-100(
+          class='hover:bg-gray-200 text-gray-700 font-semibold py-2 rounded-lg transition'
+        ) 취소
+        button#confirmBtn.flex-1(
+          class='bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 rounded-lg transition'
+        ) 확인
+
+  script.
+    var modal = document.getElementById('modal');
+    var enrollBtn = document.getElementById('enrollBtn');
+    var cancelBtn = document.getElementById('cancelBtn');
+    var confirmBtn = document.getElementById('confirmBtn');
+    var accessCodeInput = document.getElementById('accessCodeInput');
+    var modalError = document.getElementById('modalError');
+
+    enrollBtn.addEventListener('click', function () {
+      accessCodeInput.value = '';
+      modalError.classList.add('hidden');
+      modal.classList.remove('hidden');
+      accessCodeInput.focus();
+    });
+
+    cancelBtn.addEventListener('click', function () {
+      modal.classList.add('hidden');
+    });
+
+    confirmBtn.addEventListener('click', async function () {
+      var code = accessCodeInput.value.trim();
+      if (!code) return;
+
+      var res = await fetch('/lectures/enroll', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ access_code: code })
+      });
+      var data = await res.json();
+
+      if (data.success) {
+        modal.classList.add('hidden');
+        window.location.reload();
+      } else {
+        modalError.textContent = data.message;
+        modalError.classList.remove('hidden');
+      }
+    });
+
+    // 모달 바깥 클릭시 닫기
+    modal.addEventListener('click', function (e) {
+      if (e.target === modal) modal.classList.add('hidden');
+    });

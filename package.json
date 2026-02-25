@@ -15,8 +15,10 @@
     "jade": "~1.11.0",
     "jsonwebtoken": "^9.0.3",
     "morgan": "~1.9.1",
+    "multer": "^2.0.2",
     "mysql2": "^3.18.0",
     "swagger-jsdoc": "^6.2.8",
-    "swagger-ui-express": "^5.0.1"
+    "swagger-ui-express": "^5.0.1",
+    "uuid": "^13.0.0"
   }
 }

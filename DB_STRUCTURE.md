@@ -3,13 +3,13 @@
 ## ERD 관계 요약
 
 ```
-users    1:N lectures (professor_id)
-lectures 1:N assignments
-lectures 1:N lecture_enrollments
-users    1:N lecture_enrollments
-users    1:N submissions
-assignments 1:N submissions
-files    1:N submissions
+users           1:N lectures (professor_id)
+lectures        1:N assignments
+lectures        1:N lecture_enrollments
+users           1:N lecture_enrollments
+users           1:N submissions
+assignments     1:N submissions
+submissions     1:N submission_items
 ```
 
 ---
@@ -52,10 +52,11 @@ files    1:N submissions
 | week | INT | NOT NULL | 주차 |
 | topic | VARCHAR(100) | NOT NULL | 주제 |
 | week_order | INT | NOT NULL | 주차별 순서 (1, 2) |
-| video_title | VARCHAR(100) | - | 영상 제목 |
-| practice_content | TEXT | NOT NULL | 실습 내용 |
-| main_content | TEXT | - | 주요 내용 |
+| video_title | VARCHAR(100) | NULL | 영상 제목 |
+| practice_content | TEXT | NULL | 실습 내용 |
+| main_content | TEXT | NULL | 주요 내용 |
 | submit_types | VARCHAR(100) | NOT NULL, DEFAULT '["text"]' | 허용 제출 형식 (JSON 배열) |
+| open_date | DATETIME | NULL | 오픈 날짜 |
 | due_date | DATETIME | NULL | 마감 날짜 |
 | created_at | DATETIME | DEFAULT NOW() | 생성일 |
 
@@ -80,7 +81,7 @@ files    1:N submissions
 | original_name | VARCHAR(255) | NOT NULL | 원본 파일명 |
 | stored_name | VARCHAR(255) | NOT NULL | 서버 저장 파일명 |
 | file_path | VARCHAR(255) | NOT NULL | 저장 경로 |
-| file_type | ENUM('image','video') | NOT NULL | 파일 타입 |
+| file_type | ENUM('image','video','document') | NOT NULL | 파일 타입 |
 | file_size | INT | NOT NULL | 파일 크기 (bytes) |
 | uploaded_at | DATETIME | DEFAULT NOW() | 업로드일 |
 
@@ -92,7 +93,17 @@ files    1:N submissions
 | id | INT | PK, AUTO_INCREMENT | 고유 식별자 |
 | user_id | INT | FK → users.id | 제출한 학생 |
 | assignment_id | INT | FK → assignments.id | 과제 |
-| submit_type | ENUM('text','image','video') | NOT NULL | 제출 형식 |
-| content | TEXT | - | 텍스트 내용 |
-| file_id | INT | FK → files.id | 첨부 파일 |
+| submit_type | ENUM('text','image','video','document') | NOT NULL | 제출 형식 (교수 관리용) |
 | submitted_at | DATETIME | DEFAULT NOW() | 제출일 |
+
+---
+
+### submission_items
+| 컬럼 | 타입 | 제약 | 설명 |
+|------|------|------|------|
+| id | INT | PK, AUTO_INCREMENT | 고유 식별자 |
+| submission_id | INT | FK → submissions.id, CASCADE | 소속 제출 |
+| order | INT | NOT NULL | 순서 |
+| type | ENUM('text','image','video','document') | NOT NULL | 항목 타입 |
+| content | TEXT | NULL | 텍스트 내용 |
+| url | VARCHAR(500) | NULL | 파일 URL |

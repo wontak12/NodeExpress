@@ -43,8 +43,9 @@ function authRequired(req, res, next) {
 router.get("/", authRequired, async function (req, res) {
   try {
     var [lectures] = await db.query(
-      `SELECT l.* FROM lectures l
+      `SELECT l.*, u.name AS professor_name FROM lectures l
        INNER JOIN lecture_enrollments le ON l.id = le.lecture_id
+       INNER JOIN users u ON l.professor_id = u.id
        WHERE le.user_id = ?`,
       [req.user.id],
     );
